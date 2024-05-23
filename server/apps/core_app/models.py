@@ -49,7 +49,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 class Profile(models.Model):
     """Profile for each user."""
     username = models.CharField(max_length=32)
-    about = models.CharField(max_length=1000)
+    about = models.CharField(max_length=1000, blank=True, null=True)
     user = models.OneToOneField(settings.AUTH_USER_MODEL,
                             on_delete=models.CASCADE,
                             related_name='profile')
