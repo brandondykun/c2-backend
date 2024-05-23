@@ -23,8 +23,10 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
+app_name = 'user_app'
+
 urlpatterns = [
-    path("users/", views.CreateUserView.as_view(), name="create_user"),
+    path("create-user/", views.CreateUserView.as_view(), name="create_user"),
     path("users/<int:pk>/", views.RetrieveUpdateUserView.as_view(), name="retrieve_update_user"),
     path("profiles/", views.SearchCreateProfileView.as_view(), name="search_create_profile"),
     path("profiles/<int:pk>/", views.RetrieveUpdateProfileView.as_view(), name="retrieve_update_profile"),

@@ -1,6 +1,8 @@
 from django.urls import path
 from . import views
 
+app_name = 'mission_app'
+
 urlpatterns = [
     # TEAM URLS
     path("teams/", views.ListCreateTeamView.as_view(),

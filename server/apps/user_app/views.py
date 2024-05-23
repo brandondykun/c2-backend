@@ -23,6 +23,34 @@ from drf_spectacular.utils import extend_schema_view, extend_schema, OpenApiPara
 class CreateUserView(generics.CreateAPIView):
     """Create a new user in the system."""
     serializer_class = UserSerializer
+    permission_classes = []
+    authentication_classes = []
+
+    def create(self, request, *args, **kwargs):
+        username = request.data.get('username', None)
+        email = request.data.get('email', None)
+        password = request.data.get('password', None)
+
+        if not username or not email or not password:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        # create User
+        user_serializer = self.get_serializer(data={'email': email,
+                                                    'password': password})
+        user_serializer.is_valid(raise_exception=True)
+        self.perform_create(user_serializer)
+        # create Profile
+        profile_serializer = ProfileSerializer(data={'username': username,
+                                                     'user': user_serializer.data['id'],
+                                                     'about': None})
+        profile_serializer.is_valid(raise_exception=True)
+        self.perform_create(profile_serializer)
+
+        user = User.objects.get(id=user_serializer.data['id'])
+        response_serializer = UserProfileSerializer(user)
+
+        headers = self.get_success_headers(response_serializer.data)
+        return Response(response_serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class RetrieveUpdateUserView(generics.RetrieveUpdateAPIView):
